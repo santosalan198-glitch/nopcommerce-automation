@@ -47,4 +47,8 @@ public abstract class BasePage {
                 "arguments[0].scrollIntoView(true);", element
         );
     }
+    protected void jsClick(By locator) {
+        WebElement element = WaitUtils.waitForVisible(locator);
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
+    }
 }

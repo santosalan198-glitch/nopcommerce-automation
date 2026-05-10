@@ -2,6 +2,7 @@ package com.nopcommerce.pages;
 import com.nopcommerce.base.BasePage;
 import com.nopcommerce.utils.WaitUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -58,28 +59,20 @@ public class InventoryPage extends BasePage {
 
     public void addProductsByIndex(int... indexes) {
         WaitUtils.waitForVisible(By.cssSelector("button.btn_inventory"));
-        List<WebElement> buttons = driver.findElements(addToCartButtons);
 
-        if (indexes.length > buttons.size()) {
-            throw new IllegalArgumentException(
-                    "Solo hay " + buttons.size() + " productos disponibles"
-            );
-        }
+        for (int index : indexes) {
+            List<WebElement> buttons = driver.findElements(addToCartButtons);
+            if (index >= buttons.size()) {
+                throw new IllegalArgumentException(
+                        "Solo hay " + buttons.size() + " productos disponibles"
+                );
+            }
+            // JavaScript click — más confiable en CI headless
+            ((JavascriptExecutor) driver).executeScript(
+                    "arguments[0].click();", buttons.get(index));
 
-        for (int i = 0; i < indexes.length; i++) {
-            buttons.get(indexes[i]).click();
-            // Espera a que el badge del carrito muestre el número correcto
-            final int expectedCount = i + 1;
-            new WebDriverWait(driver, Duration.ofSeconds(10))
-                    .until(d -> {
-                        try {
-                            String badge = d.findElement(
-                                    By.className("shopping_cart_badge")).getText();
-                            return Integer.parseInt(badge) == expectedCount;
-                        } catch (Exception e) {
-                            return false;
-                        }
-                    });
+            // Pausa mínima para que el DOM se actualice
+            try { Thread.sleep(500); } catch (InterruptedException e) {}
         }
     }
     public int getCartCount(){
