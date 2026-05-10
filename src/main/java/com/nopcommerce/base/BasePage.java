@@ -9,6 +9,9 @@ import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import java.time.Duration;
 
 public abstract class BasePage {
 
@@ -51,4 +54,19 @@ public abstract class BasePage {
         WebElement element = WaitUtils.waitForVisible(locator);
         ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
     }
+    protected void dismissChromePopupIfPresent() {
+        try {
+            // Espera máximo 3 segundos por el popup
+            WebDriverWait shortWait = new WebDriverWait(driver, Duration.ofSeconds(3));
+            WebElement closeButton = shortWait.until(
+                    ExpectedConditions.elementToBeClickable(
+                            By.cssSelector("button[jsname='tWT92d'], button.VfPpkd-LgbsSe")
+                    )
+            );
+            closeButton.click();
+        } catch (Exception e) {
+            // No hay popup — continuar normalmente
+        }
+    }
+
 }

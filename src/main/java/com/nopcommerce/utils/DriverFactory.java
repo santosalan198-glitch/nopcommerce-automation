@@ -8,13 +8,14 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 
 import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DriverFactory {
 
     public static WebDriver createDriver(String browser) {
         WebDriver driver;
 
-        // Lee headless de variable de entorno (CI) o config.properties (local)
         String headlessEnv = System.getenv("headless");
         boolean isHeadless = headlessEnv != null
                 ? Boolean.parseBoolean(headlessEnv)
@@ -27,7 +28,17 @@ public class DriverFactory {
                 if (isHeadless) {
                     chromeOptions.addArguments("--headless=new");
                 }
-                chromeOptions.addArguments("--no-sandbox", "--disable-dev-shm-usage", "--window-size=1920,1080");
+                chromeOptions.addArguments("--no-sandbox");
+                chromeOptions.addArguments("--disable-dev-shm-usage");
+                chromeOptions.addArguments("--window-size=1920,1080");
+                chromeOptions.addArguments("--incognito"); // ← perfil limpio sin historial
+
+                Map<String, Object> prefs = new HashMap<>();
+                prefs.put("credentials_enable_service", false);
+                prefs.put("profile.password_manager_enabled", false);
+                prefs.put("profile.password_manager_leak_detection", false);
+                chromeOptions.setExperimentalOption("prefs", prefs);
+
                 driver = new ChromeDriver(chromeOptions);
                 break;
             case "firefox":

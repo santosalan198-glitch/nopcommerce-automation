@@ -25,10 +25,16 @@ public class LoginPage extends BasePage {
         return this;
     }
 
-    public void loginAs(String username, String password){
-        enterUsername(username);
-        enterPassword(password);
+    public LoginPage clickLoginButton() {
         click(loginButton);
+        return this;
+    }
+
+    public void loginAs(String username, String password) {
+        enterUsername(username)
+                .enterPassword(password)
+                .clickLoginButton();
+        dismissChromePopupIfPresent(); // ← cierra el popup si aparece
     }
 
 
