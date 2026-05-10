@@ -66,18 +66,20 @@ public class InventoryPage extends BasePage {
             );
         }
 
-        for (int index : indexes) {
-            // Cuenta Remove buttons antes del clic
-            int removeCountBefore = driver.findElements(
-                    By.cssSelector("button.btn_secondary")).size();
-
-            buttons.get(index).click();
-
-            // Espera a que aumente el número de Remove buttons
-            final int expectedCount = removeCountBefore + 1;
+        for (int i = 0; i < indexes.length; i++) {
+            buttons.get(indexes[i]).click();
+            // Espera a que el badge del carrito muestre el número correcto
+            final int expectedCount = i + 1;
             new WebDriverWait(driver, Duration.ofSeconds(10))
-                    .until(d -> d.findElements(
-                            By.cssSelector("button.btn_secondary")).size() == expectedCount);
+                    .until(d -> {
+                        try {
+                            String badge = d.findElement(
+                                    By.className("shopping_cart_badge")).getText();
+                            return Integer.parseInt(badge) == expectedCount;
+                        } catch (Exception e) {
+                            return false;
+                        }
+                    });
         }
     }
     public int getCartCount(){
