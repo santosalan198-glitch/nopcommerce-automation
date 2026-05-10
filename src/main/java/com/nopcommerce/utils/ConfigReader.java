@@ -27,6 +27,10 @@ public class ConfigReader {
     }
 
     public static int getInt(String key) {
+        if (key.equals("explicit.wait")) {
+            String envWait = System.getenv("EXPLICIT_WAIT");
+            if (envWait != null) return Integer.parseInt(envWait);
+        }
         return Integer.parseInt(get(key));
     }
 

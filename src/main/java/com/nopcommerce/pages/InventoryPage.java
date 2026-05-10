@@ -1,5 +1,6 @@
 package com.nopcommerce.pages;
 import com.nopcommerce.base.BasePage;
+import com.nopcommerce.utils.WaitUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
@@ -68,13 +69,14 @@ public class InventoryPage extends BasePage {
         }
     }
     public void addProductsByIndex(int... indexes) {
+        WaitUtils.waitForVisible(By.cssSelector("button.btn_inventory"));
         List<WebElement> buttons = driver.findElements(addToCartButtons);
+        if (indexes.length > buttons.size()) {
+            throw new IllegalArgumentException(
+                    "Solo hay " + buttons.size() + " productos disponibles"
+            );
+        }
         for (int index : indexes) {
-            if (index >= buttons.size()) {
-                throw new IllegalArgumentException(
-                        "Posicion " + index + " no existe"
-                );
-            }
             buttons.get(index).click();
         }
     }

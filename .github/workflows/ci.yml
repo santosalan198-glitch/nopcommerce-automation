@@ -30,6 +30,7 @@ jobs:
         run: mvn clean test
         env:
           headless: true
+          EXPLICIT_WAIT: "20"
 
       - name: Generar reporte Allure
         if: always()
