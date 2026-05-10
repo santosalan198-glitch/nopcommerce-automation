@@ -22,9 +22,10 @@ public class CartPage extends BasePage {
          return isDisplayed(cartTitle);
      }
 
-     public int getCartItemCount() {
-         return driver.findElements(cartItems).size();
-     }
+    public int getCartItemCount() {
+        WaitUtils.waitForVisible(cartTitle);
+        return driver.findElements(cartItems).size();
+    }
 
      public List<String> getCartItemNames() {
          List<String> names = new ArrayList<>();
@@ -57,6 +58,8 @@ public class CartPage extends BasePage {
 
     public void goToCart() {
         click(iconCart);
-        WaitUtils.waitForVisible(cartTitle); // espera a que cargue la página del carrito
+        WaitUtils.waitForVisible(cartTitle);
+        // Espera a que los items carguen
+        try { Thread.sleep(1000); } catch (InterruptedException e) {}
     }
 }
