@@ -28,6 +28,8 @@ jobs:
 
       - name: Ejecutar tests
         run: mvn clean test
+        env:
+          headless: true
 
       - name: Generar reporte Allure
         if: always()

@@ -14,11 +14,17 @@ public class DriverFactory {
     public static WebDriver createDriver(String browser) {
         WebDriver driver;
 
+        // Lee headless de variable de entorno (CI) o config.properties (local)
+        String headlessEnv = System.getenv("headless");
+        boolean isHeadless = headlessEnv != null
+                ? Boolean.parseBoolean(headlessEnv)
+                : ConfigReader.getBoolean("headless");
+
         switch (browser.toLowerCase()) {
             case "chrome":
                 WebDriverManager.chromedriver().setup();
                 ChromeOptions chromeOptions = new ChromeOptions();
-                if (ConfigReader.getBoolean("headless")) {
+                if (isHeadless) {
                     chromeOptions.addArguments("--headless=new");
                 }
                 chromeOptions.addArguments("--no-sandbox", "--disable-dev-shm-usage", "--window-size=1920,1080");
@@ -27,7 +33,7 @@ public class DriverFactory {
             case "firefox":
                 WebDriverManager.firefoxdriver().setup();
                 FirefoxOptions firefoxOptions = new FirefoxOptions();
-                if (ConfigReader.getBoolean("headless")) {
+                if (isHeadless) {
                     firefoxOptions.addArguments("--headless");
                 }
                 driver = new FirefoxDriver(firefoxOptions);
