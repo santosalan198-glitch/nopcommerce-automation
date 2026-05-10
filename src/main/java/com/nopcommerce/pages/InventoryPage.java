@@ -78,6 +78,8 @@ public class InventoryPage extends BasePage {
         }
         for (int index : indexes) {
             buttons.get(index).click();
+            // Espera a que el botón cambie a "Remove" antes del siguiente clic
+            WaitUtils.waitForVisible(By.cssSelector("button.btn_secondary"));
         }
     }
     public int getCartCount(){

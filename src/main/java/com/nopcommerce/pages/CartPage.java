@@ -1,6 +1,7 @@
 package com.nopcommerce.pages;
 
 import com.nopcommerce.base.BasePage;
+import com.nopcommerce.utils.WaitUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
@@ -60,5 +61,6 @@ public class CartPage extends BasePage {
 
     public void goToCart() {
         click(iconCart);
+        WaitUtils.waitForVisible(cartTitle); // espera a que cargue la página del carrito
     }
 }
