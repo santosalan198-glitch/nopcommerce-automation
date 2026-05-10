@@ -14,7 +14,6 @@ public class CartPage extends BasePage {
      private final By cartTitle = By.className("title");
      private final By cartItems = By.className("cart_item");
      private final By checkoutButton = By.id("checkout");
-     private final By continueShoppingButton = By.id("continue-shopping");
      private final By nameLocator = By.className("inventory_item_name");
      private final By iconCart = By.id("shopping_cart_container");
 
@@ -48,9 +47,6 @@ public class CartPage extends BasePage {
         }
     }
 
-    public void continueShopping(){
-         click(continueShoppingButton);
-     }
      public void clickCheckout(){
          click(checkoutButton);
      }

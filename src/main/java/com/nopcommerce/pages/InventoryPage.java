@@ -4,6 +4,9 @@ import com.nopcommerce.utils.WaitUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,16 +17,11 @@ public class InventoryPage extends BasePage {
     private final By productTitle = By.className("title");
     private final By productItems = By.className("inventory_item");
     private final By addToCartButtons = By.cssSelector("button.btn_inventory");
-    private final By cartIcon = By.id("shopping_cart_container");
+    private final By cartBadge = By.className("shopping_cart_badge");
     private final By productName = By.className("inventory_item_name");
     private final By productPrice = By.className("inventory_item_price");
-    private final By productDescription = By.className("inventory_item_desc");
     private final By sortDropdown = By.className("product_sort_container");
-    private final By sortOptionAZ = By.cssSelector("option[value='az']");
-    private final By sortOptionZA = By.cssSelector("option[value='za']");
-    private final By sortOptionLowHigh = By.cssSelector("option[value='lohi']");
-    private final By sortOptionHighLow = By.cssSelector("option[value='hilo']");
-    private final By removeButtons = By.cssSelector("button.btn_secondary");
+
 
 
     // --- Actions ---
@@ -58,31 +56,31 @@ public class InventoryPage extends BasePage {
         return prices;
     }
 
-    public void addProductToCart(int quantity){
-        List <WebElement> buttons = driver.findElements(addToCartButtons);
-        if (quantity > buttons.size()) {
-            throw new IllegalArgumentException("Solo hay " + buttons.size() + "productos disponibles");
-            // Limitar la cantidad al número de productos disponibles
-        }
-        for (int i = 0; i < quantity; i++){
-            buttons.get(i).click();
-        }
-    }
     public void addProductsByIndex(int... indexes) {
         WaitUtils.waitForVisible(By.cssSelector("button.btn_inventory"));
         List<WebElement> buttons = driver.findElements(addToCartButtons);
+
         if (indexes.length > buttons.size()) {
             throw new IllegalArgumentException(
                     "Solo hay " + buttons.size() + " productos disponibles"
             );
         }
+
         for (int index : indexes) {
+            // Cuenta Remove buttons antes del clic
+            int removeCountBefore = driver.findElements(
+                    By.cssSelector("button.btn_secondary")).size();
+
             buttons.get(index).click();
-            // Espera a que el botón cambie a "Remove" antes del siguiente clic
-            WaitUtils.waitForVisible(By.cssSelector("button.btn_secondary"));
+
+            // Espera a que aumente el número de Remove buttons
+            final int expectedCount = removeCountBefore + 1;
+            new WebDriverWait(driver, Duration.ofSeconds(10))
+                    .until(d -> d.findElements(
+                            By.cssSelector("button.btn_secondary")).size() == expectedCount);
         }
     }
     public int getCartCount(){
-        return Integer.parseInt(driver.findElement(cartIcon).getText());
+        return Integer.parseInt(driver.findElement(cartBadge).getText());
     }
 }

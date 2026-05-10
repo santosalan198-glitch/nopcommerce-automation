@@ -10,10 +10,8 @@ public class CheckoutPage extends BasePage {
     private final By lastNameInput = By.id("last-name");
     private final By postalCodeInput = By.id("postal-code");
     private final By continueButton = By.id("continue");
-    private final By cancelButton = By.id("cancel");
     private final By errorMessage = By.cssSelector("h3[data-test='error']");
     private final By finishButton = By.id("finish");
-    private final By precioTotal = By.className("summary_total_label");
     private final By messageComplete = By.className("complete-header");
 
 
@@ -33,14 +31,6 @@ public class CheckoutPage extends BasePage {
 
      public String getErrorMessage(){
         return getText(errorMessage);
-     }
-
-     public String getOrderTotal(){
-        return getText(precioTotal);
-     }
-
-     public void clickCancel(){
-        click(cancelButton);
      }
 
      public void clickFinish(){
