@@ -47,6 +47,8 @@ public class InventoryTest extends BaseTest {
         Assert.assertEquals(inventoryPage.getProductCount(),6,"El número de productos en la página de inventario no es el esperado");
     }
 
+    // CASOS DE FILTROS
+
     @Test(description = "Verificar filtro por nombre A-Z",
     groups = {"regression"})
     @Severity(SeverityLevel.NORMAL)
@@ -97,7 +99,7 @@ public class InventoryTest extends BaseTest {
         Collections.sort(sortedPrices, Collections.reverseOrder());
         Assert.assertEquals(actualPrices, sortedPrices, "Los productos no están ordenados por precio de mayor a menor correctamente");
     }
-
+    // CASOS DE CARRITO
     @Test (description = "Verificar que se puedan agregar productos al carrito",
     groups = {"regression"})
     @Severity(SeverityLevel.CRITICAL)
